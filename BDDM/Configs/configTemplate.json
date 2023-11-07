@@ -1,0 +1,16 @@
+{
+  "fields": [],
+  "references": {
+  },
+  "listFields": {
+    "fields": [],
+    "references": {},
+    "listFields": {}
+  },
+  "relatedEntities": {
+    "fieldName": {
+      "parentFieldName": "table_name",
+      "fields": []
+    }
+  }
+}

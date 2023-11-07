@@ -1,0 +1,3 @@
+Implement outgoing integration for POSM Withdrawal Task
+https://jira.iqos.ru/browse/BT-358?filter=-1
+-Создан конфиг

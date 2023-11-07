@@ -2,7 +2,7 @@
   "fields": [
     "posm_number",
     "sys_created_at",
-    "updated_at",
+    "sys_updated_at",
     "posm_description",
     "posm_status",
     "posm_type",
@@ -104,7 +104,9 @@
       "parentFieldName": "posm_task",
       "fields": [
         "posm_fact_quantity",
-        "posm_planned_quantity"
+        "posm_planned_quantity",
+        "posm_channel",
+        "posm_fact_quantity"
       ]
     }
   }
