@@ -1,0 +1,6 @@
+BT-332
+-Добавлена запись для BDDM Outgoing Config
+-Добавлено поле для BDDM Outgoing Config {
+    label: Name,
+    name: core_name
+}

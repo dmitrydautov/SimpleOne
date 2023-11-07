@@ -8,20 +8,20 @@ class IntegrationSerializer {
   /**
    *
    * @param {Object} currentRecord - Simple One record
+   * @param {Object} configName - BDDM Outgoing Config record
    * @returns {Object}
    * @description - Method gets Simple One record from Business process and searching Configuration
    *                from BDDM Outgoing Config which linked for this Object. Then created JS object based on config and
    *                return it.
    */
-  serialize(currentRecord) {
+  serialize(currentRecord, configName) {
     try {
       const tableName = currentRecord.getTableName();
-      const tableInfo = this._getTableInformation(tableName)
-      const fieldSetConfig = this._getTableConfig(tableInfo.getTableId())
+      const fieldSetConfig = this._getTableConfig(configName)
       return this._serializeObject(tableName, fieldSetConfig, currentRecord)
     } catch (e) {
       //TODO: Сделать логирование, когда будет готов единообразный подход
-      ss.info('We have an error in BDDM Serializer class: ' + e);
+      ss.info('We have an error in BDDM Serializer class: ' + e + '\n' + e.stack);
     }
   }
 
@@ -30,50 +30,62 @@ class IntegrationSerializer {
   }
 
   _serializeHandler(tableName, fieldSetConfig, currentValues) {
-    const serializedObject = {};
-    const tableInfo = this._getTableInformation(tableName).getColumnsInfo();
+    if (currentValues) {
+      const serializedObject = {};
+      const tableInfo = this._getTableInformation(tableName).getColumnsInfo();
 
-    Object.keys(fieldSetConfig).forEach(key => {
-      switch (key) {
-        case FIELD_KEY:
-          fieldSetConfig[key].forEach(field => serializedObject[field] = currentValues[field])
-          break;
-        case REFERENCE_KEY:
-          Object.keys(fieldSetConfig[key]).forEach((referenceField => {
-            serializedObject[referenceField] =
-              new IntegrationSerializer()._serializeObject(referenceField,
-                fieldSetConfig[key][referenceField],
-                currentValues[referenceField])
-          }))
-          break;
-        case LIST_KEY:
-          Object.keys(fieldSetConfig[key]).forEach((arrayField => {
-            serializedObject[arrayField] =
-              this._listTypeHelper(currentValues[arrayField],
-                fieldSetConfig[key][arrayField],
-                tableInfo[arrayField].referenceTableName)
-          }))
-          break;
-        case RELATED_ENTITY_KEY:
-          Object.keys(fieldSetConfig[key]).forEach((relatedEntity => {
-            serializedObject[relatedEntity] =
-              this._referenceTypeHelper(
-                currentValues.sys_id,
-                fieldSetConfig[key][relatedEntity].parentFieldName,
-                fieldSetConfig[key][relatedEntity],
-                relatedEntity
-              )
-          }))
-          break;
-      }
-    })
+      Object.keys(fieldSetConfig).forEach(key => {
+        switch (key) {
 
-    return serializedObject;
+          case FIELD_KEY:
+            fieldSetConfig[key].forEach(field => {
+              serializedObject[field] = currentValues[field]
+            })
+            break;
+
+          case REFERENCE_KEY:
+            Object.keys(fieldSetConfig[key]).forEach((referenceField => {
+
+              serializedObject[referenceField] =
+                new IntegrationSerializer()._serializeObject(
+                  tableInfo[referenceField].referenceTableName,
+                  fieldSetConfig[key][referenceField],
+                  currentValues[referenceField])
+            }))
+            break;
+
+          case LIST_KEY:
+            Object.keys(fieldSetConfig[key]).forEach((arrayField => {
+
+              serializedObject[arrayField] =
+                this._listTypeHelper(
+                  currentValues[arrayField],
+                  fieldSetConfig[key][arrayField],
+                  tableInfo[arrayField].referenceTableName)
+            }))
+            break;
+
+          case RELATED_ENTITY_KEY:
+            Object.keys(fieldSetConfig[key]).forEach((relatedEntity => {
+
+              serializedObject[relatedEntity] =
+                this._referenceTypeHelper(
+                  currentValues.sys_id,
+                  fieldSetConfig[key][relatedEntity].parentFieldName,
+                  fieldSetConfig[key][relatedEntity],
+                  relatedEntity
+                )
+            }))
+            break;
+        }
+      })
+      return serializedObject;
+    }
   }
 
-  _getTableConfig(id) {
+  _getTableConfig(name) {
     const config = new SimpleRecord('core_bddm_outgoing_config');
-    config.addQuery('core_simple_table', id);
+    config.addQuery('core_name', name);
     config.query();
 
     if (config.getRowCount() !== 0) {
