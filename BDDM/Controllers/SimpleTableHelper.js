@@ -22,16 +22,21 @@ class SimpleTableHelper {
   }
 
   _getTableObject() {
-    const result = {};
+    const result = {
+      fieldsInfo: {}
+    };
     const table = new SimpleRecord("sys_db_table");
     table.addQuery("name", this.#tableName);
     table.query();
 
-    if (table.next()) {
+    while (table.next()) {
       result.tableId = table.sys_id;
 
+      const tables = [table.sys_id];
+      tables.push(...this._searchParentTable());
+
       const columns = new SimpleRecord("sys_db_column");
-      columns.addQuery("table_id", table.sys_id);
+      columns.addQuery("table_id", 'in', tables);
       columns.query();
 
       while (columns.next()) {
@@ -42,7 +47,13 @@ class SimpleTableHelper {
         };
       }
     }
+    return result;
   }
+
+  _searchParentTable() {
+    return  new SimpleTable(this.#tableName).getParentTables().map(table => table.sys_id)
+  }
+
 
   /**
    * @returns {String}

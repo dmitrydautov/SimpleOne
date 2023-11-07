@@ -1,0 +1,111 @@
+{
+  "fields": [
+    "posm_number",
+    "sys_created_at",
+    "updated_at",
+    "posm_description",
+    "posm_status",
+    "posm_type",
+    "posm_warehouse_contact_person_name_to",
+    "posm_warehouse_contact_person_phone_to",
+    "contact_person_name",
+    "contact_person_phone",
+    "posm_urgency",
+    "posm_urgency_reason",
+    "posm_planned_start_date_by_initiator",
+    "posm_planned_end_date_by_initiator",
+    "posm_contact_person_name",
+    "posm_contact_person_phone"
+  ],
+  "references": {
+    "posm_assigned_to": {
+      "fields": [
+        "code",
+        "name"
+      ]
+    },
+    "posm_assignment_group": {
+      "fields": [
+        "name"
+      ]
+    },
+    "posm_warehouse_to": {
+      "fields": [
+        "name",
+        "code"
+      ],
+      "references": {
+        "posm_legal_entity": {
+          "fields": [
+            "code",
+            "name"
+          ]
+        }
+      }
+    },
+    "posm_pos": {
+      "fields": [
+        "name"
+      ]
+    },
+    "posm_parent_task": {
+      "fields": [
+        "name"
+      ]
+    },
+    "posm_pos_to": {
+      "fields": [
+        "name",
+        "code"
+      ]
+    },
+    "posm_warehouse_from": {
+      "fields": [
+        "name",
+        "code"
+      ],
+      "references": {
+        "posm_legal_entity": {
+          "fields": [
+            "code",
+            "name"
+          ]
+        }
+      }
+    },
+    "posm_pos_from": {
+      "fields": [
+        "name",
+        "code"
+      ]
+    },
+    "posm_service_provider": {
+      "fields": [
+        "name"
+      ],
+      "references": {
+        "posm_legal_entity": {
+          "fields": [
+            "code",
+            "name"
+          ]
+        }
+      }
+    },
+    "posm_legal_entity": {
+      "fields": [
+        "code",
+        "name"
+      ]
+    }
+  },
+  "relatedEntities": {
+    "posm_requested_catalog_items": {
+      "parentFieldName": "posm_task",
+      "fields": [
+        "posm_fact_quantity",
+        "posm_planned_quantity"
+      ]
+    }
+  }
+}
