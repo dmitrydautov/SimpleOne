@@ -1,0 +1,37 @@
+{
+  "posm_number": "",
+  "sys_created_at": "2023-11-05 14:25:32",
+  "sys_updated_at": "2023-11-09 10:38:13",
+  "posm_description": "",
+  "posm_status": "",
+  "posm_warehouse_contact_person_name_to": "",
+  "posm_warehouse_contact_person_phone_to": "",
+  "contact_person_name": "",
+  "contact_person_phone": "",
+  "posm_urgency": "",
+  "posm_urgency_reason": "",
+  "posm_planned_start_date_by_initiator": "",
+  "posm_planned_end_date_by_initiator": "",
+  "posm_assigned_to": null,
+  "posm_assignment_group": null,
+  "posm_warehouse_to": null,
+  "posm_pos": null,
+  "posm_parent_task": null,
+  "posm_pos_to": null,
+  "posm_warehouse_from": null,
+  "posm_pos_from": null,
+  "posm_service_provider": {
+    "posm_name": "Name",
+    "posm_legal_entity": {
+      "code": "123",
+      "name": ""
+    }
+  },
+  "posm_requested_catalog_items": [
+    {
+      "posm_fact_quantity": "",
+      "posm_planned_quantity": 1,
+      "posm_channel": ""
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "fields": [
     "posm_number",
     "sys_created_at",
-    "updated_at",
+    "sys_updated_at",
     "posm_description",
     "posm_status",
     "posm_type",
@@ -14,8 +14,8 @@
     "posm_urgency_reason",
     "posm_planned_start_date_by_initiator",
     "posm_planned_end_date_by_initiator",
-    "posm_contact_person_name",
-    "posm_contact_person_phone"
+    "contact_person_name",
+    "contact_person_phone"
   ],
   "references": {
     "posm_assigned_to": {
@@ -81,7 +81,7 @@
     },
     "posm_service_provider": {
       "fields": [
-        "name"
+        "posm_name"
       ],
       "references": {
         "posm_legal_entity": {
@@ -104,7 +104,9 @@
       "parentFieldName": "posm_task",
       "fields": [
         "posm_fact_quantity",
-        "posm_planned_quantity"
+        "posm_planned_quantity",
+        "posm_channel",
+        "posm_fact_quantity"
       ]
     }
   }

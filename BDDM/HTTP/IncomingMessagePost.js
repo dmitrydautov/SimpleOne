@@ -5,9 +5,13 @@ ss.importIncludeScript("BDDMResponseClasses");
   try {
     const reqBody = request.getBody();
 
-    reqBody.forEach((message) => {
-      insertIncomingMessages(message, responseBody);
-    });
+    if(Object.keys(reqBody).length > 0) {
+      reqBody.forEach((message) => {
+        insertIncomingMessages(message, responseBody);
+      });
+    } else {
+      responseBody.addError(new ErrorMessage('Request is empty'));
+    }
   } catch (e) {
     responseBody.addError(e.stack);
   }

@@ -1,0 +1,2 @@
+BT-358
+-Добавлен конфиг для POSM Withdrawl Task
