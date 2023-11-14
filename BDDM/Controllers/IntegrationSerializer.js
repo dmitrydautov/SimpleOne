@@ -1,4 +1,5 @@
 ss.importIncludeScript('SimpleTableHelper')
+ss.importIncludeScript('ConfigHelper')
 const FIELD_KEY = 'fields'
 const REFERENCE_KEY = 'references'
 const LIST_KEY = 'listFields'
@@ -84,21 +85,7 @@ class IntegrationSerializer {
   }
 
   _getTableConfig(name) {
-    const config = new SimpleRecord('core_bddm_outgoing_config');
-    config.addQuery('core_name', name);
-    config.query();
-
-    if (config.getRowCount() !== 0) {
-      config.next();
-
-      if (config.core_active) {
-        return JSON.parse(config.core_config);
-      } else {
-        throw new Error('The config is not active')
-      }
-    } else {
-      throw new Error('The config not is set for this table')
-    }
+    return new ConfigHelper(name).getConfigMessage();
   }
 
   _getTableInformation(tableName) {

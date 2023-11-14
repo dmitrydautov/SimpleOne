@@ -1,0 +1,71 @@
+{
+  "fields": [
+    "posm_number",
+    "posm_code_space",
+    "sys_created_at",
+    "sys_updated_at",
+    "posm_status",
+    "posm_description_of_cargo",
+    "posm_volume",
+    "posm_weight",
+    "posm_quantity",
+    "posm_planned_delivery_start_date_by_initiator",
+    "posm_planned_delivery_end_date_by_initiator",
+    "contact_person_phone",
+    "posm_urgency"
+  ],
+  "references": {
+    "posm_assignment_group": {
+      "fields": [
+        "name",
+        "description"
+      ]
+    },
+    "posm_warehouse_to": {
+      "fields": [
+        "code"
+      ]
+    },
+    "posm_pos_to": {
+      "fields": [
+        "code"
+      ]
+    },
+    "posm_warehouse_from": {
+      "fields": [
+        "code"
+      ]
+    },
+    "posm_pos_from": {
+      "fields": [
+        "code"
+      ]
+    },
+    "posm_location_from": {
+      "fields": [
+        "name"
+      ]
+    },
+    "posm_location_to": {
+      "fields": [
+        "name"
+      ]
+    },
+    "posm_assigned_to": {
+      "fields": ["code", "ad_code"]
+    },
+    "posm_type": {
+      "fields": ["name"]
+    }
+  },
+  "relatedEntities": {
+    "posm_requested_catalog_item": {
+      "parentFieldName": "posm_task",
+      "fields": [
+        "posm_channel",
+        "posm_fact_quantity",
+        "posm_planned_quantity"
+      ]
+    }
+  }
+}
