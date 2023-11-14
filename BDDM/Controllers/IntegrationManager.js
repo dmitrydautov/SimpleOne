@@ -20,7 +20,7 @@ class IntegrationManager {
   _getTableNameId(record) {
     const tableName = record.getTableName();
 
-    const table = new SimpleTable('sys_db_table')
+    const table = new SimpleRecord("sys_db_table");
     table.addQuery('name', tableName);
     table.query();
     table.next();
@@ -30,8 +30,9 @@ class IntegrationManager {
 
   _createIntegrationOutgoingRecord(record, configName) {
     const targetRecord = ss.getDocIdByIds(this._getTableNameId(record), record.sys_id);
-    const entity = new ConfigHelper(configName).getEntityName();
-    const config = new IntegrationSerializer().serialize(record, configName)
+    const configHelper = new ConfigHelper(configName)
+    const entity = configHelper.getEntityName();
+    const config = JSON.stringify(new IntegrationSerializer().serialize(record, configHelper))
 
     const outgoingRecord = new SimpleRecord('core_bddm_integration_outgoing');
     outgoingRecord.core_target_record = targetRecord;

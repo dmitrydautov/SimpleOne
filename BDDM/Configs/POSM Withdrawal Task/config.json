@@ -55,11 +55,11 @@
       "fields": ["code", "ad_code"]
     },
     "posm_type": {
-      "fields": ["name"]
+      "fields": ["posm_name"]
     }
   },
   "relatedEntities": {
-    "posm_requested_catalog_item": {
+    "posm_requested_catalog_items": {
       "parentFieldName": "posm_task",
       "fields": [
         "posm_channel",
