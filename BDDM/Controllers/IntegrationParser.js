@@ -43,12 +43,22 @@ class IntegrationParser {
     }
   }
 
-  _searchObject(table, field, value) {
+  _searchObject(table, field, value, createStub) {
     const record = new SimpleRecord(table);
     record.addQuery(field, "in", value);
     record.query();
     if (record.getRowCount() > 0) {
       record.next();
+    } else if (createStub){
+      record.initialize();
+      record[field] = value;
+      record.is_temporary_stub = true;
+
+      const result = record.insert();
+
+      if (result === '0') {
+        throw new Error('Parser has an error: ' + record.getErrors());
+      }
     }
 
     return record;
@@ -60,12 +70,13 @@ class IntegrationParser {
       const value = parentObjectData[relatedTableName][field];
       const record = this._searchObject(relatedTableName, field, value);
 
-      if (record.sys_id) {
-        const parentTableField =
-            parentObjectData[relatedTableName][PARENT_TABLE_FIELD];
-        record[parentTableField] = parentId;
-        record.update();
-      }
+      //TODO: Implement later
+      // if (record.sys_id) {
+      //   const parentTableField =
+      //       parentObjectData[relatedTableName][PARENT_TABLE_FIELD];
+      //   record[parentTableField] = parentId;
+      //   record.update();
+      // }
     });
   }
 
@@ -74,7 +85,7 @@ class IntegrationParser {
 
     array.forEach((elem) => {
       const field = Object.keys(elem)[0];
-      const tempObject = this._searchObject(table, field, elem[field]);
+      const tempObject = this._searchObject(table, field, elem[field], true);
 
       if (tempObject.sys_id) {
         result.push(tempObject.sys_id);
@@ -86,9 +97,9 @@ class IntegrationParser {
 
   _referenceTypeHelper(table, referenceData) {
     const field = Object.keys(referenceData)[0];
-    const record = this._searchObject(table, field, referenceData[field]);
+    const record = this._searchObject(table, field, referenceData[field], true);
 
-    return record.sys_id ? record.sys_id : "";
+    return record.sys_id;
   }
 
   _prepeareObject(currentObject, fieldToValueMap, tableInfo) {
