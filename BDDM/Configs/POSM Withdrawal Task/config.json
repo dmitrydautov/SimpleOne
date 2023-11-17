@@ -1,6 +1,7 @@
 {
   "fields": [
     "posm_number",
+    "posm_code_space",
     "sys_created_at",
     "sys_updated_at",
     "posm_status",
@@ -49,15 +50,16 @@
       "fields": [
         "name"
       ]
+    },
+    "posm_assigned_to": {
+      "fields": ["code", "ad_code"]
+    },
+    "posm_type": {
+      "fields": ["posm_name"]
     }
   },
-  "listFields": {
-    "fields": [],
-    "references": {},
-    "listFields": {}
-  },
   "relatedEntities": {
-    "posm_requested_catalog_item": {
+    "posm_requested_catalog_items": {
       "parentFieldName": "posm_task",
       "fields": [
         "posm_channel",

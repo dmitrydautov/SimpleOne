@@ -8,17 +8,16 @@ class IntegrationSerializer {
   /**
    *
    * @param {Object} currentRecord - Simple One record
-   * @param {Object} configName - BDDM Outgoing Config record
+   * @param {Object} config - Config helper instance from IntegrationManager script
    * @returns {Object}
    * @description - Method gets Simple One record from Business process and searching Configuration
    *                from BDDM Outgoing Config which linked for this Object. Then created JS object based on config and
    *                return it.
    */
-  serialize(currentRecord, configName) {
+  serialize(currentRecord, config) {
     try {
       const tableName = currentRecord.getTableName();
-      const fieldSetConfig = this._getTableConfig(configName)
-      return this._serializeObject(tableName, fieldSetConfig, currentRecord)
+      return this._serializeObject(tableName, config.getConfigMessage(), currentRecord)
     } catch (e) {
       //TODO: Сделать логирование, когда будет готов единообразный подход
       ss.info('We have an error in BDDM Serializer class: ' + e + '\n' + e.stack);
@@ -80,24 +79,6 @@ class IntegrationSerializer {
         }
       })
       return serializedObject;
-    }
-  }
-
-  _getTableConfig(name) {
-    const config = new SimpleRecord('core_bddm_outgoing_config');
-    config.addQuery('core_name', name);
-    config.query();
-
-    if (config.getRowCount() !== 0) {
-      config.next();
-
-      if (config.core_active) {
-        return JSON.parse(config.core_config);
-      } else {
-        throw new Error('The config is not active')
-      }
-    } else {
-      throw new Error('The config not is set for this table')
     }
   }
 
