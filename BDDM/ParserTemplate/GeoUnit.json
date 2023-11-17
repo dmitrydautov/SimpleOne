@@ -1,0 +1,19 @@
+{
+  "esbMessageId":"23423",
+  "bddmEntityName" : "PMI.BDDM.StaticData.OrganizationStructure.GEOStructure.GeoUnit",
+  "messageBody": {
+    "core_geo_unit" : {
+      "keyField" : "code",
+      "code": "value",
+      "name": "value",
+      "status": "value",
+      "strata": "value",
+      "latitude": 0.1456,
+      "longitude": 0.1456,
+      "tree_level": "value",
+      "parent_geo_unit_id": {
+          "code": "value"
+        }
+    }
+  }
+}

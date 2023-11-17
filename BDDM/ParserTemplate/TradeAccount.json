@@ -1,0 +1,25 @@
+{
+  "esbMessageId":"23423",
+  "bddmEntityName" : "PMI.BDDM.StaticData.TradeAccount.TradeAccount",
+  "messageBody": {
+    "core_trade_account" : {
+      "keyField" : "code",
+      "code": "value",
+      "name": "value",
+      "status": "value",
+      "type": "value",
+      "visible_from": "value",
+      "legal_entity_ids": [
+        {
+          "code": "value"
+        },
+        {
+          "code": "value"
+        }
+      ],
+      "responsible_geo_unit_id": {
+          "code": "value"
+        }
+    }
+  }
+}

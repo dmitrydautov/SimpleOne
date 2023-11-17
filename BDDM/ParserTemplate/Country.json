@@ -1,0 +1,12 @@
+{
+  "esbMessageId":"23423",
+  "bddmEntityName" : "PMI.BDDM.StaticData.GlobalOrganization.Country",
+  "messageBody": {
+    "core_country" : {
+      "keyField" : "Не указано",
+      "is_active": true,
+      "iso_extended": "value",
+      "name": "value"
+    }
+  }
+}

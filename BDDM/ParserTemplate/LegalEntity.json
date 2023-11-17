@@ -1,0 +1,19 @@
+{
+  "esbMessageId":"23423",
+  "bddmEntityName" : "PMI.BDDM.StaticData.LegalEntity.LegalEntity",
+  "messageBody": {
+    "core_legal_entity" : {
+      "keyField" : "code",
+      "code": "value",
+      "address_line": "value",
+      "city": "value",
+      "full_address": "value",
+      "region": "value",
+      "zip_code": "value",
+      "form": "value",
+      "registered_name": "value",
+      "sap_code": "value",
+      "status": "value"
+    }
+  }
+}

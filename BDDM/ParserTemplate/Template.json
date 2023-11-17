@@ -1,0 +1,28 @@
+{
+  "esbMessageId":"23423",
+  "bddmEntityName" : "PMI.BDDM.StaticData.PPOSM.POSMCatalogItem", //hardcode
+  "messageBody": {
+    "posm_material" : {
+      "keyField" : "posm_sap_code", //hardcode
+      "posm_sap_code" : "value",
+      "posm_name" : "value",
+      "posm_catalog_group_owner" : "",
+      "posm_characteristics" : {
+        "keyField" : missing,
+        "parentTableField" : "posm_catalog_item", //hardcode
+        "posm_header_type" : "",
+        "posm_show_box_type" : ""
+      },
+      "posm_type_hierarchy" : { "posm_code" : "value"},
+      "posm_active": true,
+      "posm_set" : true,
+      "posm_valuable" : true,
+      "posm_number_of_shelves" : 11,
+      "posm_number_of_slots" : 11,
+      "posm_serial_number_provided" : true,
+      "posm_tax_characteristic": "value",
+      "posm_type": "",
+      "posm_vendor_legal_entity" : { "code" : "value" }
+    }
+  }
+}
