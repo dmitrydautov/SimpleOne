@@ -16,7 +16,12 @@ let messageIdToResponses = {};
   try {
     const reqBody = request.getBody();
 
-    prepeareMapFromResponse(reqBody, messageIdToResponses);
+    if (reqBody.length === 0) {
+      responseBody.addError(
+        new ErrorMessage('Request is empty', null)
+      );
+    }
+    prepeareMapFromResponse(reqBody, messageIdToResponses, responseBody);
 
     const outgoingMessage = getOutgoingMessages(
       Object.keys(messageIdToResponses)
@@ -45,16 +50,20 @@ function checkingOutgoingMessage(outgoingMessage) {
   switch (response.sendingResult) {
     case RESPONSE_STATUS_OK:
       outgoingMessage.core_status = STATUS_PROCESSED;
+      outgoingMessage.core_esb_message_id = response.esbMessageId
       break;
     case RESPONSE_STATUS_ERROR:
+      if (outgoingMessage.core_status !== STATUS_ERROR) {
+        ss.eventQueue(
+          "BDDMNotification",
+          outgoingMessage,
+          prepeareEmailOfUsersForNotification()
+        );
+      }
       outgoingMessage.core_status = STATUS_ERROR;
-      outgoingMessage.core_sending_errors = formatErrorMessage(response.errors);
-
-      ss.eventQueue(
-        "BDDMNotification",
-        outgoingMessage,
-        prepeareEmailOfUsersForNotification()
-      );
+      outgoingMessage.core_sending_errors = response.errors && response.errors.length > 0 ?
+        formatErrorMessage(response.errors) :
+        'Undefined error';
       break;
     case RESPONSE_STATUS_SKIPPED:
       outgoingMessage.core_status = STATUS_NEW;
@@ -82,9 +91,15 @@ function getIntegrationSettings() {
   return settings.next();
 }
 
-function prepeareMapFromResponse(reqBody, messageIdToResponses) {
+function prepeareMapFromResponse(reqBody, messageIdToResponses, responseBody) {
   reqBody.forEach((requestElement) => {
-    messageIdToResponses[requestElement.recordId] = requestElement;
+    if (requestElement.sendingResult && requestElement.esbMessageId && requestElement.recordId) {
+      messageIdToResponses[requestElement.recordId] = requestElement;
+    } else {
+      responseBody.addError(
+        new ErrorMessage('sendingResult or esbMessageId or recordId field is empty', requestElement.recordId)
+      );
+    }
   });
 }
 
