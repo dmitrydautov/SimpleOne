@@ -6,43 +6,46 @@ class UserGroupManager {
    * @param {Object} message - Object which includes User Group code and array of user codes
    * @returns {void}
    * @description - Method gets message and update user groups
+   * @return {string} - Errors
    */
   process(message) {
     if (message) {
-      this._manageRoles(message)
-
+      try {
+        this._manageRoles(message)
+      } catch (e) {
+        this.#errorMessages.push('We have errors in UserGroupManager script: ' + e + '\n' + e.stack)
+      }
       if (this.#errorMessages) {
-        ss.info(this.#errorMessages.reduce(function (result, value) {
+        const errors = this.#errorMessages.reduce(function (result, value) {
           return result + '\n' + value
-        }, 'We have errors in UserGroupManager script:'))
+        }, 'We have errors in UserGroupManager script:');
+        ss.info(errors)
+        return errors;
       }
     }
   }
 
   _manageRoles(message) {
     if (message.GroupCode) {
-      const userGroups = this._getUserGroups(message.GroupCode)
+      const groupId = this._getGroupId(message.GroupCode);
+      const userGroups = this._getUserGroups(groupId)
       const incomingUsers = this._getUsersForGroup(message.Users)
 
-      this._updateUserRoles(userGroups, incomingUsers);
+      this._updateUserRoles(userGroups, incomingUsers, groupId);
     }
   }
 
-  _updateUserRoles(userGroups, users) {
+  _updateUserRoles(userGroups, users, groupId) {
     let incomingUserIds = [];
-    let userGroupInfo;
 
     while (users.next()) {
       incomingUserIds.push(users.sys_id);
     }
 
     while (userGroups.next()) {
-      if (incomingUserIds.includes(userGroups.user_id)) {
-        if (!userGroupInfo) {
-          userGroupInfo = this._getUserGroupInfo(userGroups);
-        }
-
-        incomingUserIds = incomingUserIds.map(userId => userId !== userGroups.user_id);
+      const index = incomingUserIds.indexOf(userGroups.user_id);
+      if (index !== -1) {
+        incomingUserIds.splice(index, 1);
       } else {
         const result = userGroups.deleteRecord();
 
@@ -52,17 +55,16 @@ class UserGroupManager {
       }
 
       if (incomingUserIds.length > 0) {
-        incomingUserIds.forEach(id => this._addToGroup(userGroupInfo, id))
+        incomingUserIds.forEach(userId => this._addToGroup(groupId, userId))
       }
     }
   }
 
-  _addToGroup(useGroupInfo, userId) {
+  _addToGroup(groupId, userId) {
     const userGroup = new SimpleRecord('sys_user_group')
     userGroup.initialize();
     userGroup.user_id = userId;
-    userGroup.group_id = useGroupInfo.groupId;
-    userGroup.code = useGroupInfo.groupCode;
+    userGroup.group_id = groupId;
 
     const result = userGroup.insert();
 
@@ -71,16 +73,9 @@ class UserGroupManager {
     }
   }
 
-  _getUserGroupInfo(userGroup) {
-    return {
-      groupCode: userGroup.code,
-      groupId: userGroup.groupId
-    }
-  }
-
-  _getUserGroups(groupCode) {
-    const group = new SimpleRecord('GroupCode')
-    group.addQuery('code', groupCode)
+  _getUserGroups(groupId) {
+    const group = new SimpleRecord('sys_user_group')
+    group.addQuery('group_id', groupId)
     group.query()
 
     return group;
@@ -90,9 +85,22 @@ class UserGroupManager {
     const userCodes = incomingUsers.map(userCode => userCode.Code)
 
     const users = new SimpleRecord('user')
-    users.addQuery('code', 'in', userCodes)
+    users.addQuery('ad_code', 'in', userCodes)
     users.query()
 
     return users;
+  }
+
+  _getGroupId(code) {
+    const group = new SimpleRecord('sys_group');
+    group.addQuery('code', code);
+    group.query();
+
+    if (group.getRowCount() > 0) {
+      group.next();
+      return group.sys_id;
+    } else {
+      throw new Error('There is no group with this code')
+    }
   }
 }

@@ -1,0 +1,34 @@
+[
+  {
+    "posm_task": {
+      "keyField": "posm_code_space",
+      "posm_code_space": "55555555522212sss22s",
+      "number": 1,
+      "reference": {
+        "code": "12231"
+      },
+      "list": [
+        {
+          "code": 1
+        },
+        {
+          "code": 2
+        }
+      ],
+      "table_2_name": [
+        {
+          "keyField": "code",
+          "parentTableField": ""
+        }
+      ]
+    }
+  },
+  {
+    "posm_task": {
+      "keyField": "posm_code_space",
+      "posm_code_space": "55555555522212sss22s",
+      "posm_subject" : "penis",
+      "posm_request": {"posm_code_space": "5555"}
+    }
+  }
+]
