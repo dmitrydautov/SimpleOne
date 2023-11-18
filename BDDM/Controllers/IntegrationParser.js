@@ -1,4 +1,5 @@
 ss.importIncludeScript("SimpleTableHelper");
+ss.importIncludeScript("IntegrationTemporaryStubHelper");
 const REFERENCE_TYPE = "reference";
 const LIST_TYPE = "list";
 const PARENT_TABLE_FIELD = "parentTableField";
@@ -8,6 +9,7 @@ class IntegrationParser {
   #integrationMessage;
   #relatedEntities = [];
 
+
   /**
    * @param {string} message - message from integration service
    * @returns {string} Errors
@@ -16,17 +18,18 @@ class IntegrationParser {
   parse(message) {
     try {
       this.#integrationMessage = JSON.parse(message);
-      this._parseObjectHandler();
+      return this._parseObjectHandler();
     } catch (e) {
       ss.error("We have an error from IntegrationParser: " + e.stack);
-      return "We have an error from IntegrationParser: " + e + e.stack
+      throw new Error("We have an error from IntegrationParser: " + e + '\n' + e.stack)
     }
   }
 
   _parseObjectHandler() {
     const tableName = Object.keys(this.#integrationMessage)[0];
+    const tableInfo = new SimpleTableHelper(tableName)
     const objectData = this.#integrationMessage[tableName];
-    const currentTableInfo = new SimpleTableHelper(tableName).getColumnsInfo();
+    const currentTableInfo = tableInfo.getColumnsInfo();
     const tempObject = this._prepareObject(
       this._searchObject(
         tableName,
@@ -39,6 +42,9 @@ class IntegrationParser {
     if (this.#relatedEntities.length > 0) {
       this._relatedEntityHelper(tempObject.sys_id, objectData);
     }
+
+    //Create target record field value for created simple record
+    return ss.getDocIdByIds(tableInfo.getTableId(), tempObject.sys_id)
   }
 
   _prepareObject(currentObject, fieldToValueMap, tableInfo) {
@@ -82,15 +88,8 @@ class IntegrationParser {
         record.is_temporary_stub = false;
       }
     } else if (createStub) {
-      const newRecord = new SimpleRecord(table);
-      newRecord.initialize();
-      newRecord[field] = value;
-      newRecord.is_temporary_stub = true;
-      const result = newRecord.insert();
-      if (result === '0') {
-        throw new Error('Parser has an error: ' + newRecord.getErrors());
-      }
-      return newRecord
+       const rec = new IntegrationTemporaryStubHelper().insertObject(table, field, value)
+      return rec
     } else {
       const newRecord = new SimpleRecord(table);
       newRecord.initialize();
@@ -141,7 +140,7 @@ class IntegrationParser {
       result = currentObject.insert();
     }
     if (result === '0') {
-      throw new Error(record.getErrors());
+      throw new Error(currentObject.getErrors());
     }
     return currentObject;
   }
