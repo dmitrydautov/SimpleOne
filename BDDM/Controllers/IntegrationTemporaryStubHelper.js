@@ -1,4 +1,6 @@
 class IntegrationTemporaryStubHelper {
+  INACTIVE_STATUS = 'inactive';
+
   CODE_FIELDS = ['code', 'posm_code']
 
   TYPE_MAP = {
@@ -27,32 +29,32 @@ class IntegrationTemporaryStubHelper {
     const newRecord = new SimpleRecord(tableName);
 
     newRecord.initialize();
-    newRecord.is_temporary_stub = true
+    if (Object.keys(fieldInfo).includes('is_temporary_stub')) {
+      newRecord.is_temporary_stub =  true
+    }
     if (field && value) {
       newRecord[field] = value;
     }
 
-    mandatoryFields.forEach(field => {
-      ss.info(field)
+    mandatoryFields.forEach(tempField => {
+      if (tempField === field) return
 
-      const type = fieldInfo[field].columnType
+      const type = fieldInfo[tempField].columnType
       if (this.TYPE_MAP.DATE.includes(type)) {
-        newRecord[field] = this.TEMPORARY_DATA.DATE;
+        newRecord[tempField] = this.TEMPORARY_DATA.DATE;
       } else if (this.TYPE_MAP.FLOAT.includes(type)) {
-        newRecord[field] = this.TEMPORARY_DATA.FLOAT;
+        newRecord[tempField] = this.TEMPORARY_DATA.FLOAT;
       } else if (this.TYPE_MAP.STRING.includes(type)) {
-        newRecord[field] = this.TEMPORARY_DATA.STRING;
+        newRecord[tempField] = this.TEMPORARY_DATA.STRING;
       } else if (this.TYPE_MAP.INTEGER.includes(type)) {
-        newRecord[field] = this.TEMPORARY_DATA.INTEGER;
-      } else if (this.TYPE_MAP.LIST.includes(type) ||
-        this.TYPE_MAP.REFERENCE.includes(type)) {
-        newRecord[field] = this.insertObject(fieldInfo[field].referenceTableName).sys_id
+        newRecord[tempField] = this.TEMPORARY_DATA.INTEGER;
       } else if (this.TYPE_MAP.CHOICE.includes(type)) {
-        newRecord[field] = fieldInfo[field].choiceValues[0]
+        newRecord[tempField] = fieldInfo[tempField].choiceValues.includes(this.INACTIVE_STATUS) ?
+          this.INACTIVE_STATUS : fieldInfo[tempField].choiceValues[0]
       }
 
-      if (this.CODE_FIELDS.includes(field)) {
-        newRecord[field] = this.TEMPORARY_DATA.CODE + this._getRandomIntInclusive(100, 999)
+      if (this.CODE_FIELDS.includes(tempField)) {
+        newRecord[tempField] = this.TEMPORARY_DATA.CODE + this._getRandomIntInclusive(100, 999)
       }
     })
     const result = newRecord.insert()

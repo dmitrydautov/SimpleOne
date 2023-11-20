@@ -1,6 +1,4 @@
 class SimpleTableHelper {
-  TYPE_REFERENCE = 'reference';
-  TYPE_LIST = 'list';
   TYPE_CHOICE = 'choice';
 
   #tableInfo;
@@ -48,7 +46,7 @@ class SimpleTableHelper {
 
         const choiceValues = [];
         if (columns.column_type_id.name === this.TYPE_CHOICE) {
-          const choices = this._searchChoiceValues(columns.sys_id);
+          const choices = this._searchChoiceValues(columns.sys_id, columns.reference_id);
           while (choices.next()) {
             choiceValues.push(choices.value);
           }
@@ -67,16 +65,19 @@ class SimpleTableHelper {
     return result;
   }
 
-  _search(table, field, value) {
+  _search(table, field, value, tableId) {
     const record = new SimpleRecord(table);
     record.addQuery(field, 'in', value)
+    if (tableId) {
+      record.addQuery('table_id', tableId)
+    }
     record.query();
 
     if (record.getRowCount() > 0) {
       return record;
     } else {
       throw new Error('Simple Table Helper can\'t find information about these data: ' +
-        '\nTable: ' + table + ' \nField: ' + field + ' \nValue: ' + value);
+        '\nTable: ' + table + ' \nField: ' + field + ' \nValue: ' + value + '\nTableID: ' + tableId);
     }
   }
 
@@ -84,8 +85,8 @@ class SimpleTableHelper {
     return new SimpleTable(this.#tableName).getParentTables().map(table => table.sys_id)
   }
 
-  _searchChoiceValues(value) {
-    return this._search('sys_choice', 'column_id', value);
+  _searchChoiceValues(value, tableId) {
+    return this._search('sys_choice', 'column_id', value, tableId);
   }
 
   /**

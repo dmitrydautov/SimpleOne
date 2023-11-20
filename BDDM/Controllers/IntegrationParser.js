@@ -4,7 +4,6 @@ const REFERENCE_TYPE = "reference";
 const LIST_TYPE = "list";
 const PARENT_TABLE_FIELD = "parentTableField";
 const KEY_FIELD = "keyField";
-
 class IntegrationParser {
   #integrationMessage;
   #relatedEntities = [];
@@ -88,8 +87,7 @@ class IntegrationParser {
         record.is_temporary_stub = false;
       }
     } else if (createStub) {
-       const rec = new IntegrationTemporaryStubHelper().insertObject(table, field, value)
-      return rec
+      return new IntegrationTemporaryStubHelper().insertObject(table, field, value)
     } else {
       const newRecord = new SimpleRecord(table);
       newRecord.initialize();
