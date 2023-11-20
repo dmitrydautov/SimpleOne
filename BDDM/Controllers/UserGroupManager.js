@@ -11,16 +11,17 @@ class UserGroupManager {
   process(message) {
     if (message) {
       try {
-        this._manageRoles(message)
+
+        this._manageRoles(JSON.parse(message))
+        if (this.#errorMessages.length > 0) {
+          const errors = this.#errorMessages.reduce(function (result, value) {
+            return result + '\n' + value
+          }, 'We have errors in UserGroupManager script:');
+          ss.error(errors)
+          return errors;
+        }
       } catch (e) {
         this.#errorMessages.push('We have errors in UserGroupManager script: ' + e + '\n' + e.stack)
-      }
-      if (this.#errorMessages) {
-        const errors = this.#errorMessages.reduce(function (result, value) {
-          return result + '\n' + value
-        }, 'We have errors in UserGroupManager script:');
-        ss.info(errors)
-        return errors;
       }
     }
   }
@@ -36,26 +37,33 @@ class UserGroupManager {
   }
 
   _updateUserRoles(userGroups, users, groupId) {
-    let incomingUserIds = [];
+    if (userGroups.getRowCount() > 0) {
+      const incomingUserIds = [];
 
-    while (users.next()) {
-      incomingUserIds.push(users.sys_id);
-    }
-
-    while (userGroups.next()) {
-      const index = incomingUserIds.indexOf(userGroups.user_id);
-      if (index !== -1) {
-        incomingUserIds.splice(index, 1);
-      } else {
-        const result = userGroups.deleteRecord();
-
-        if (!result) {
-          this.#errorMessages.push(userGroups.getErrors());
-        }
+      while (users.next()) {
+        incomingUserIds.push(users.sys_id);
       }
 
-      if (incomingUserIds.length > 0) {
-        incomingUserIds.forEach(userId => this._addToGroup(groupId, userId))
+      while (userGroups.next()) {
+        const index = incomingUserIds.indexOf(String(userGroups.user_id));
+
+        if (index !== -1) {
+          incomingUserIds.splice(index, 1);
+        } else {
+          const result = userGroups.deleteRecord(userGroups.sys_id);
+
+          if (!result) {
+            this.#errorMessages.push(userGroups.getErrors());
+          }
+        }
+
+        if (incomingUserIds.length > 0) {
+          incomingUserIds.forEach(userId => this._addToGroup(groupId, userId))
+        }
+      }
+    } else {
+      while (users.next()) {
+        this._addToGroup(groupId, users.sys_id)
       }
     }
   }
@@ -68,7 +76,7 @@ class UserGroupManager {
 
     const result = userGroup.insert();
 
-    if (result !== 0) {
+    if (result === '0') {
       this.#errorMessages.push(userGroup.getErrors())
     }
   }

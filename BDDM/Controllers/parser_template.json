@@ -1,34 +1,172 @@
-[
-  {
-    "posm_task": {
-      "keyField": "posm_code_space",
-      "posm_code_space": "55555555522212sss22s",
-      "number": 1,
-      "reference": {
-        "code": "12231"
-      },
-      "list": [
-        {
-          "code": 1
-        },
-        {
-          "code": 2
-        }
-      ],
-      "table_2_name": [
-        {
-          "keyField": "code",
-          "parentTableField": ""
-        }
-      ]
-    }
+{
+  "is_temporary_stub": {
+    "referenceTableName": null,
+    "columnName": "is_temporary_stub",
+    "columnType": "boolean"
   },
-  {
-    "posm_task": {
-      "keyField": "posm_code_space",
-      "posm_code_space": "55555555522212sss22s",
-      "posm_subject" : "penis",
-      "posm_request": {"posm_code_space": "5555"}
-    }
+  "legal_entity_id": {
+    "referenceTableName": "core_legal_entity",
+    "columnName": "legal_entity_id",
+    "columnType": "reference"
+  },
+  "code_space": {
+    "referenceTableName": null,
+    "columnName": "code_space",
+    "columnType": "string"
+  },
+  "longitude": {
+    "referenceTableName": null,
+    "columnName": "longitude",
+    "columnType": "float"
+  },
+  "latitude": {
+    "referenceTableName": null,
+    "columnName": "latitude",
+    "columnType": "float"
+  },
+  "exclusion_case": {
+    "referenceTableName": null,
+    "columnName": "exclusion_case",
+    "columnType": "boolean"
+  },
+  "exceptional_case": {
+    "referenceTableName": null,
+    "columnName": "exceptional_case",
+    "columnType": "boolean"
+  },
+  "zip_code": {
+    "referenceTableName": null,
+    "columnName": "zip_code",
+    "columnType": "string"
+  },
+  "street": {
+    "referenceTableName": null,
+    "columnName": "street",
+    "columnType": "string"
+  },
+  "region": {
+    "referenceTableName": null,
+    "columnName": "region",
+    "columnType": "string"
+  },
+  "full_address": {
+    "referenceTableName": null,
+    "columnName": "full_address",
+    "columnType": "string"
+  },
+  "fias": {
+    "referenceTableName": null,
+    "columnName": "fias",
+    "columnType": "string"
+  },
+  "district": {
+    "referenceTableName": null,
+    "columnName": "district",
+    "columnType": "string"
+  },
+  "city_district": {
+    "referenceTableName": null,
+    "columnName": "city_district",
+    "columnType": "string"
+  },
+  "city": {
+    "referenceTableName": null,
+    "columnName": "city",
+    "columnType": "string"
+  },
+  "building": {
+    "referenceTableName": null,
+    "columnName": "building",
+    "columnType": "string"
+  },
+  "address_line": {
+    "referenceTableName": null,
+    "columnName": "address_line",
+    "columnType": "string"
+  },
+  "working_hours": {
+    "referenceTableName": null,
+    "columnName": "working_hours",
+    "columnType": "text"
+  },
+  "visible_to": {
+    "referenceTableName": null,
+    "columnName": "visible_to",
+    "columnType": "date"
+  },
+  "visible_from": {
+    "referenceTableName": null,
+    "columnName": "visible_from",
+    "columnType": "date"
+  },
+  "trade_account_id": {
+    "referenceTableName": "core_trade_account",
+    "columnName": "trade_account_id",
+    "columnType": "reference"
+  },
+  "sales_channel": {
+    "referenceTableName": null,
+    "columnName": "sales_channel",
+    "columnType": "choice"
+  },
+  "registered_name": {
+    "referenceTableName": null,
+    "columnName": "registered_name",
+    "columnType": "string"
+  },
+  "phone_ids": {
+    "referenceTableName": "core_phone",
+    "columnName": "phone_ids",
+    "columnType": "list"
+  },
+  "name": {
+    "referenceTableName": null,
+    "columnName": "name",
+    "columnType": "string"
+  },
+  "geo_unit_id": {
+    "referenceTableName": "core_geo_unit",
+    "columnName": "geo_unit_id",
+    "columnType": "reference"
+  },
+  "status": {
+    "referenceTableName": null,
+    "columnName": "status",
+    "columnType": "choice"
+  },
+  "code": {
+    "referenceTableName": null,
+    "columnName": "code",
+    "columnType": "string"
+  },
+  "sys_db_table_id": {
+    "referenceTableName": "sys_db_table",
+    "columnName": "sys_db_table_id",
+    "columnType": "record_class"
+  },
+  "sys_updated_by": {
+    "referenceTableName": "user",
+    "columnName": "sys_updated_by",
+    "columnType": "reference"
+  },
+  "sys_created_by": {
+    "referenceTableName": "user",
+    "columnName": "sys_created_by",
+    "columnType": "reference"
+  },
+  "sys_updated_at": {
+    "referenceTableName": null,
+    "columnName": "sys_updated_at",
+    "columnType": "datetime"
+  },
+  "sys_created_at": {
+    "referenceTableName": null,
+    "columnName": "sys_created_at",
+    "columnType": "datetime"
+  },
+  "sys_id": {
+    "referenceTableName": null,
+    "columnName": "sys_id",
+    "columnType": "biginteger"
   }
-]
+}
